@@ -25,7 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:gravity="center_vertical|start"
-            android:text="Bonobo"
             android:textColor="?android:textColorPrimary" />
 
         <TextView
@@ -33,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="top|start"
-            android:text="dance, electronics"
             android:textColor="?android:textColorSecondary" />
 
         <LinearLayout
@@ -46,7 +44,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:text="8 альбомов, "
                 android:textColor="?android:textColorSecondary" />
 
             <TextView
@@ -54,7 +51,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:text="95 песен"
                 android:textColor="?android:textColorSecondary" />
         </LinearLayout>
     </LinearLayout>

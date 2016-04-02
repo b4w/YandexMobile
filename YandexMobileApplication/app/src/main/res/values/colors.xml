@@ -6,7 +6,7 @@
     <color name="mainBackground">#FFFFFF</color>
 
     <!--Text-->
-    <color name="toolbarHeading">#FFF</color>
+    <color name="textToolbarHeading">#FFF</color>
     <color name="textColorPrimary">#000</color>
     <color name="textColorSecondary">#999</color>
 </resources>
