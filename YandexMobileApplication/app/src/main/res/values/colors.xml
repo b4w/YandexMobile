@@ -7,4 +7,6 @@
 
     <!--Text-->
     <color name="toolbarHeading">#FFF</color>
+    <color name="textColorPrimary">#000</color>
+    <color name="textColorSecondary">#999</color>
 </resources>

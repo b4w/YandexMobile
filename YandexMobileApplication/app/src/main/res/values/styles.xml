@@ -1,10 +1,23 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar" />
+
+    <style name="AppThemeDefault" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <!--Style for artists list-->
+    <style name="ArtistsItem" parent="AppThemeDefault">
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <!--Style for cover small image-->
+    <style name="CoverSmall" parent="AppThemeDefault">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
     </style>
 
 </resources>

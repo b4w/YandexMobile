@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--TODO: перенести в стили высоту и ширину?-->
+    <ImageView
+        android:id="@+id/cover_small"
+        style="@style/CoverSmall"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        style="@style/ArtistsItem"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/cover_small"
+        android:layout_toRightOf="@+id/cover_small"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical|start"
+            android:text="Bonobo"
+            android:textColor="?android:textColorPrimary" />
+
+        <TextView
+            android:id="@+id/genres"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="top|start"
+            android:text="dance, electronics"
+            android:textColor="?android:textColorSecondary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/albums"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="8 альбомов, "
+                android:textColor="?android:textColorSecondary" />
+
+            <TextView
+                android:id="@+id/tracks"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="95 песен"
+                android:textColor="?android:textColorSecondary" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
