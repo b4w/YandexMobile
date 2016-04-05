@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.adapter;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.adapters;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
@@ -39,11 +39,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 //        TODO: не забыть переместить загрузку изображений в отдельный поток, правильное окончание в песнях и альбомах
         final Artist artist = artists.get(position);
 
-        // loading cover small image
-        Picasso.with(holder.coverSmall.getContext())
-                .load(artist.getCoverSmallLink())
-                .placeholder(R.drawable.load_holder)
-                .into(holder.coverSmall);
+        setCoverSmallImage(holder.coverSmall, artist.getCoverSmallLink());
 
         holder.name.setText(artist.getName());
         holder.genres.setText(Arrays.toString(artist.getGenres()));
@@ -53,6 +49,23 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
                 resources.getString(R.string.albums_genitive)));
         holder.tracks.setText(String.format(resources.getString(R.string.track_message), artist.getTracks(),
                 resources.getString(R.string.tracks_genitive)));
+    }
+
+    /**
+     * Loading of the image from Yandex json link.
+     *
+     * @param imageView - item imageView.
+     * @param imageLink - link to image.
+     */
+    private void setCoverSmallImage(ImageView imageView, String imageLink) {
+        if (imageLink != null && !imageLink.isEmpty()) {
+            Picasso.with(imageView.getContext())
+                    .load(imageLink)
+                    .placeholder(R.drawable.load_holder)
+                    .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.load_holder);
+        }
     }
 
     @Override
