@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.adapter;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,11 +36,18 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        TODO: не забыть добавить загрузку изображений, правильное окончание в песнях и альбомах
+//        TODO: не забыть переместить загрузку изображений в отдельный поток, правильное окончание в песнях и альбомах
         final Artist artist = artists.get(position);
-        holder.coverSmall.setImageResource(R.mipmap.ic_launcher);
+
+        // loading cover small image
+        Picasso.with(holder.coverSmall.getContext())
+                .load(artist.getCoverSmallLink())
+                .placeholder(R.drawable.load_holder)
+                .into(holder.coverSmall);
+
         holder.name.setText(artist.getName());
         holder.genres.setText(Arrays.toString(artist.getGenres()));
+
         final Resources resources = holder.tracks.getContext().getResources();
         holder.albums.setText(String.format(resources.getString(R.string.album_message), artist.getAlbums(),
                 resources.getString(R.string.albums_genitive)));

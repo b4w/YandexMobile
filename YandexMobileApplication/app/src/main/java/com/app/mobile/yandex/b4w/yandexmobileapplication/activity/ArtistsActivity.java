@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+
+import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.adapter.ArtistsAdapter;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,18 +59,27 @@ public class ArtistsActivity extends Activity {
 
     /**
      * Get temp data artists list.
+     *
      * @return List<Artist>.
      */
     private List<Artist> getMockArtistList() {
         List<Artist> artists = new ArrayList<>();
-        artists.add(new Artist(1, "Bonobo", new String[]{"dance", "electronics"}, 8, 95, "link",
-                "description", "coverSmallLink", "coverBigLink"));
-        artists.add(new Artist(1, "Bonobo", new String[]{"dance", "electronics"}, 8, 95, "link",
-                "description", "coverSmallLink", "coverBigLink"));
-        artists.add(new Artist(1, "Bonobo", new String[]{"dance", "electronics"}, 8, 95, "link",
-                "description", "coverSmallLink", "coverBigLink"));
-        artists.add(new Artist(1, "Bonobo", new String[]{"dance", "electronics"}, 8, 95, "link",
-                "description", "coverSmallLink", "coverBigLink"));
+        artists.add(new Artist(1080505, "Tove Lo", new String[]{"pop", "dance", "electronics"}, 81, 22,
+                "http://www.tove-lo.com/", "description",
+                "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/300x300",
+                "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/1000x1000"));
+        artists.add(new Artist(2915, "Ne-Yo", new String[]{"rnb", "pop", "rap"}, 256, 152,
+                "http://www.neyothegentleman.com/", "description",
+                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/300x300",
+                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/1000x1000"));
+        artists.add(new Artist(1080505, "Tove Lo", new String[]{"pop", "dance", "electronics"}, 81, 22,
+                "http://www.tove-lo.com/", "description",
+                "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/300x300",
+                "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/1000x1000"));
+        artists.add(new Artist(2915, "Ne-Yo", new String[]{"rnb", "pop", "rap"}, 256, 152,
+                "http://www.neyothegentleman.com/", "description",
+                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/300x300",
+                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/1000x1000"));
         return artists;
     }
 }
