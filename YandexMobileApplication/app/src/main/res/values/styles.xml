@@ -1,10 +1,12 @@
 <resources>
 
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar" />
+    <style name="AppThemeDefault" parent="Base.Theme.AppCompat.Light.DarkActionBar" />
 
-    <style name="AppThemeDefault" parent="AppTheme">
+    <style name="AppTheme" parent="AppThemeDefault">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/mainBackground</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!--Style for artists list-->
@@ -18,6 +20,11 @@
     <style name="CoverSmall" parent="AppThemeDefault">
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <!--Style for artist-->
+    <style name="Artist" parent="ArtistsItem">
+
     </style>
 
 </resources>

@@ -3,6 +3,8 @@
 
     <!--UI-->
     <string name="performers_capital">Исполнители</string>
+    <string name="dot">.</string>
+    <string name="biography_capital">Биография</string>
 
     <!--Code-->
     <!--TODO: падеж сделать с помощью Quantity Strings (Plurals)-->
