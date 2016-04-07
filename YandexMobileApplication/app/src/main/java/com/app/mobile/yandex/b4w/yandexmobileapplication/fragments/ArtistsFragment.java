@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.RecyclerItemClickListener;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.adapters.ArtistsAdapter;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 
@@ -91,6 +92,12 @@ public class ArtistsFragment extends Fragment {
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity().getApplicationContext());
         artists.setLayoutManager(manager);
         artists.setAdapter(artistsAdapter);
+        artists.addOnItemTouchListener(new RecyclerItemClickListener(getActivity().getApplicationContext(), new RecyclerItemClickListener.IOnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        }));
         Log.d(TAG, "initListItemsView() done");
     }
 }
