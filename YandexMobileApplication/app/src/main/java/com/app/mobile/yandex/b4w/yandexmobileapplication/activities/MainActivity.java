@@ -1,10 +1,11 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.activities;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.db.IDBConstants;
@@ -17,7 +18,7 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
  * <p/>
  * ArtistsActivity - activity for display of the loaded list of actors.
  */
-public class MainActivity extends Activity implements ArtistsFragment.IOpenViewArtistCallback {
+public class MainActivity extends AppCompatActivity implements ArtistsFragment.IOpenViewArtistCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int LAYOUT = R.layout.activity_main;
 
@@ -27,18 +28,47 @@ public class MainActivity extends Activity implements ArtistsFragment.IOpenViewA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
-        initToolbar();
+        updateToolbar();
         initArtistsFragment();
     }
 
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            updateToolbar();
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
-     * Initialize toolbar in artists_layout.
+     * Update toolbar in artists_layout.
      */
-    private void initToolbar() {
-        Log.d(TAG, "initToolbar() started");
-        toolbar = (Toolbar) findViewById(R.id.app_toolbar);
-        toolbar.setTitle(R.string.performers_capital);
-        Log.d(TAG, "initToolbar() done");
+    private void updateToolbar() {
+        Log.d(TAG, "updateToolbar() started");
+        if (toolbar == null) {
+            // init toolbar if first run
+            toolbar = (Toolbar) findViewById(R.id.app_toolbar);
+            if (toolbar != null) {
+                toolbar.setTitle(R.string.performers_capital);
+                setSupportActionBar(toolbar);
+            }
+        } else {
+            // update display toolbar
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            toolbar.setTitle(R.string.performers_capital);
+        }
+        Log.d(TAG, "updateToolbar() done");
     }
 
     /**
@@ -62,6 +92,7 @@ public class MainActivity extends Activity implements ArtistsFragment.IOpenViewA
         fragment.setArguments(getBundleForFragment(artist));
         fragmentManager.beginTransaction()
                 .replace(R.id.fragments_container, fragment)
+                .addToBackStack(ArtistFragment.class.getSimpleName())
                 .commit();
     }
 

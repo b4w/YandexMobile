@@ -3,6 +3,7 @@ package com.app.mobile.yandex.b4w.yandexmobileapplication.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class ArtistFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initXmlFields();
         setArtistValues();
+        initToolbar();
     }
 
     /**
@@ -110,5 +112,17 @@ public class ArtistFragment extends Fragment {
         artist.setCoverSmallLink(bundle.getString(IDBConstants.COVER_SMALL_LINK));
         artist.setCoverBigLink(bundle.getString(IDBConstants.COVER_BIG_LINK));
         Log.d(TAG, "setArgumentValues() done");
+    }
+
+    /**
+     * Initialize toolbar. Set title and back arrow.
+     */
+    private void initToolbar() {
+        Log.d(TAG, "initToolbar() started");
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(artist.getName());
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        Log.d(TAG, "initToolbar() done");
     }
 }
