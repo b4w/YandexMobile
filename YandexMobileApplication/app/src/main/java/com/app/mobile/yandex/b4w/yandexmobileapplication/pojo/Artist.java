@@ -17,6 +17,9 @@ public class Artist {
     private String coverSmallLink;
     private String coverBigLink;
 
+    public Artist() {
+    }
+
     public Artist(int id, String name, String[] genres, int albums, int tracks, String link,
                   String description, String coverSmallLink, String coverBigLink) {
         this.id = id;

@@ -1,5 +1,6 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,11 +24,19 @@ import java.util.List;
  */
 public class ArtistsFragment extends Fragment {
 
+    /**
+     * Interface for opening of the complete information on the artist.
+     */
+    public interface IOpenViewArtistCallback {
+        void openViewArtist(Artist artist);
+    }
+
     private static final String TAG = ArtistsFragment.class.getSimpleName();
 
     private RecyclerView artists;
     private ArtistsAdapter artistsAdapter;
     private List<Artist> tmpMockArtistsList;
+    private IOpenViewArtistCallback iOpenViewArtistCallback;
 
     /**
      * Return new instance ArtistsFragment.
@@ -42,6 +51,16 @@ public class ArtistsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadData();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            iOpenViewArtistCallback = (IOpenViewArtistCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement IOpenViewArtistCallback");
+        }
     }
 
     @Nullable
@@ -95,7 +114,8 @@ public class ArtistsFragment extends Fragment {
         artists.addOnItemTouchListener(new RecyclerItemClickListener(getActivity().getApplicationContext(), new RecyclerItemClickListener.IOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // можно доставать из бд через picasso image и передавать ее здесь через view.findViewById(R.id.cover_big)
+                iOpenViewArtistCallback.openViewArtist(tmpMockArtistsList.get(position));
             }
         }));
         Log.d(TAG, "initListItemsView() done");

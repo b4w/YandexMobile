@@ -75,6 +75,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        // TODO: добавить coverBig для хранения фотографии?
         private ImageView coverSmall;
         private TextView name;
         private TextView genres;
