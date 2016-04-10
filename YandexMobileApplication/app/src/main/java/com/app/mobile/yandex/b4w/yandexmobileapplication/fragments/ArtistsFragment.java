@@ -14,10 +14,17 @@ import android.view.ViewGroup;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.RecyclerItemClickListener;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.adapters.ArtistsAdapter;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.data.IYandexArtistsService;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by KonstantinSysoev on 05.04.16.
@@ -35,7 +42,7 @@ public class ArtistsFragment extends Fragment {
 
     private RecyclerView artists;
     private ArtistsAdapter artistsAdapter;
-    private List<Artist> tmpMockArtistsList;
+    private List<Artist> artistsList;
     private IOpenViewArtistCallback iOpenViewArtistCallback;
 
     /**
@@ -81,24 +88,31 @@ public class ArtistsFragment extends Fragment {
      */
     private void loadData() {
         Log.d(TAG, "loadData() started");
-        tmpMockArtistsList = new ArrayList<>();
-        tmpMockArtistsList.add(new Artist(1080505, "Tove Lo", new String[]{"pop", "dance", "electronics"}, 81, 22,
-                "http://www.tove-lo.com/", "description",
-                "123",
-                "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/1000x1000"));
-        tmpMockArtistsList.add(new Artist(2915, "Ne-Yo", new String[]{"rnb", "pop", "rap"}, 256, 152,
-                "http://www.neyothegentleman.com/", "description",
-                "",
-                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/1000x1000"));
-        tmpMockArtistsList.add(new Artist(1080505, "Tove Lo", new String[]{"pop", "dance", "electronics"}, 81, 22,
-                "http://www.tove-lo.com/", "description",
-                null,
-                "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/1000x1000"));
-        tmpMockArtistsList.add(new Artist(2915, "Ne-Yo", new String[]{"rnb", "pop", "rap"}, 256, 152,
-                "http://www.neyothegentleman.com/", "description",
-                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/300x300",
-                "http://avatars.yandex.net/get-music-content/15ae00fc.p.2915/1000x1000"));
-        artistsAdapter = new ArtistsAdapter(tmpMockArtistsList);
+        artistsList = new ArrayList<>();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IYandexArtistsService.YA_ARTISTS_LINK)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        IYandexArtistsService iYandexArtistsService = retrofit.create(IYandexArtistsService.class);
+        Call<List<Artist>> call = iYandexArtistsService.loadArtists();
+
+        call.enqueue(new Callback<List<Artist>>() {
+            @Override
+            public void onResponse(Call<List<Artist>> call, Response<List<Artist>> response) {
+                artistsList = response.body();
+                artistsAdapter = new ArtistsAdapter(artistsList);
+                initListItemsView();
+            }
+
+            @Override
+            public void onFailure(Call<List<Artist>> call, Throwable t) {
+                // TODO: добавить snackbar
+                // Snackbar.make(R.layout.fragment_artists, "TEST", Snackbar.LENGTH_LONG).show();
+                Log.e(TAG, "Error when request to http json");
+            }
+        });
         Log.d(TAG, "loadData() done");
     }
 
@@ -115,7 +129,7 @@ public class ArtistsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 // можно доставать из бд через picasso image и передавать ее здесь через view.findViewById(R.id.cover_big)
-                iOpenViewArtistCallback.openViewArtist(tmpMockArtistsList.get(position));
+                iOpenViewArtistCallback.openViewArtist(artistsList.get(position));
             }
         }));
         Log.d(TAG, "initListItemsView() done");

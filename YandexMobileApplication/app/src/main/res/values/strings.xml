@@ -12,6 +12,7 @@
     <string name="albums_genitive">альбомов</string>
     <string name="track">песня</string>
     <string name="tracks_genitive">песен</string>
-    <string name="album_message">%1$d %2$s, </string>
-    <string name="track_message"> %1$d %2$s</string>
+    <string name="album_message">%1$d %2$s,</string>
+    <string name="album_message_artist">%1$d %2$s</string>
+    <string name="track_message">%1$d %2$s</string>
 </resources>

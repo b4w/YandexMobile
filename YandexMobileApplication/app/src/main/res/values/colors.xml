@@ -8,5 +8,5 @@
     <!--Text-->
     <color name="textToolbarHeading">#FFF</color>
     <color name="textColorPrimary">#000</color>
-    <color name="textColorSecondary">#999</color>
+    <color name="textColorSecondary">#B3B3B3</color>
 </resources>

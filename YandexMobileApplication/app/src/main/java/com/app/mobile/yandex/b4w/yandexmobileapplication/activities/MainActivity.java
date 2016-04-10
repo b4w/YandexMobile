@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.db.IDBConstants;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements ArtistsFragment.I
         bundle.putInt(IDBConstants.TRACKS, artist.getTracks());
         bundle.putString(IDBConstants.LINK, artist.getLink());
         bundle.putString(IDBConstants.DESCRIPTION, artist.getDescription());
-        bundle.putString(IDBConstants.COVER_SMALL_LINK, artist.getCoverSmallLink());
-        bundle.putString(IDBConstants.COVER_BIG_LINK, artist.getCoverBigLink());
+        bundle.putString(IDBConstants.COVER_SMALL, artist.getCover().getSmall());
+        bundle.putString(IDBConstants.COVER_BIG, artist.getCover().getBig());
         Log.d(TAG, "getBundleForFragment() done");
         return bundle;
     }

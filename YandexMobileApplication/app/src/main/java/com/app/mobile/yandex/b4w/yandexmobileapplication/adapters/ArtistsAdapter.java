@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.app.mobile.yandex.b4w.yandexmobileapplication.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.squareup.picasso.Picasso;
@@ -39,10 +40,10 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 //        TODO: не забыть переместить загрузку изображений в отдельный поток, правильное окончание в песнях и альбомах
         final Artist artist = artists.get(position);
 
-        setCoverSmallImage(holder.coverSmall, artist.getCoverSmallLink());
+        setCoverSmallImage(holder.coverSmall, artist.getCover().getSmall());
 
         holder.name.setText(artist.getName());
-        holder.genres.setText(Arrays.toString(artist.getGenres()));
+        holder.genres.setText(StringUtils.getStringFromStringArray(artist.getGenres()));
 
         final Resources resources = holder.tracks.getContext().getResources();
         holder.albums.setText(String.format(resources.getString(R.string.album_message), artist.getAlbums(),

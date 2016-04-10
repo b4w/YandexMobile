@@ -7,14 +7,14 @@
     <ImageView
         android:id="@+id/cover_small"
         style="@style/CoverSmall"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:src="@drawable/load_holder" />
 
     <LinearLayout
         style="@style/ArtistsItem"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="110dp"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/cover_small"
         android:layout_toRightOf="@+id/cover_small"
@@ -30,13 +30,13 @@
         <TextView
             android:id="@+id/genres"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:gravity="top|start"
             android:textColor="?android:textColorSecondary" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -50,6 +50,7 @@
                 android:id="@+id/tracks"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
                 android:gravity="bottom"
                 android:textColor="?android:textColorSecondary" />
         </LinearLayout>

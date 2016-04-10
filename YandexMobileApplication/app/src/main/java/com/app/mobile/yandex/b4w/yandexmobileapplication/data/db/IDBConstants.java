@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.db;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.data.db;
 
 /**
  * Created by KonstantinSysoev on 09.04.16.
@@ -15,6 +15,6 @@ public interface IDBConstants {
     String TRACKS = "tracks";
     String LINK = "link";
     String DESCRIPTION = "description";
-    String COVER_SMALL_LINK = "coverSmallLink";
-    String COVER_BIG_LINK = "coverBigLink";
+    String COVER_SMALL = "coverSmall";
+    String COVER_BIG = "coverBig";
 }

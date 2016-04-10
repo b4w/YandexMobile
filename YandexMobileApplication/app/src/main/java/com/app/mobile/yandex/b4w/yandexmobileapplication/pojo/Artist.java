@@ -14,14 +14,13 @@ public class Artist {
     private int tracks;
     private String link;
     private String description;
-    private String coverSmallLink;
-    private String coverBigLink;
+    private Cover cover;
 
     public Artist() {
     }
 
     public Artist(int id, String name, String[] genres, int albums, int tracks, String link,
-                  String description, String coverSmallLink, String coverBigLink) {
+                  String description, Cover cover) {
         this.id = id;
         this.name = name;
         this.genres = genres;
@@ -29,8 +28,7 @@ public class Artist {
         this.tracks = tracks;
         this.link = link;
         this.description = description;
-        this.coverSmallLink = coverSmallLink;
-        this.coverBigLink = coverBigLink;
+        this.cover = cover;
     }
 
     public int getId() {
@@ -89,19 +87,11 @@ public class Artist {
         this.description = description;
     }
 
-    public String getCoverSmallLink() {
-        return coverSmallLink;
+    public Cover getCover() {
+        return cover;
     }
 
-    public void setCoverSmallLink(String coverSmallLink) {
-        this.coverSmallLink = coverSmallLink;
-    }
-
-    public String getCoverBigLink() {
-        return coverBigLink;
-    }
-
-    public void setCoverBigLink(String coverBigLink) {
-        this.coverBigLink = coverBigLink;
+    public void setCover(Cover cover) {
+        this.cover = cover;
     }
 }

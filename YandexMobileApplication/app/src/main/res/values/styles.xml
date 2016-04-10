@@ -7,12 +7,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:colorBackground">@color/mainBackground</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
     <!--Style for artists list-->
     <style name="ArtistsItem" parent="AppThemeDefault">
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:layout_margin">16dp</item>
     </style>
 
@@ -22,9 +22,16 @@
         <item name="android:layout_marginTop">16dp</item>
     </style>
 
+    <!--Style for cover big image-->
+    <style name="CoverBig" parent="AppThemeDefault">
+        <item name="android:layout_height">220dp</item>
+    </style>
+
     <!--Style for artist-->
     <style name="Artist" parent="ArtistsItem">
-
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
     </style>
 
 </resources>
