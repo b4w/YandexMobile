@@ -15,6 +15,7 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.RecyclerItemClickListener;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.adapters.ArtistsAdapter;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.IYandexArtistsService;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.SQLiteHelper;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 
 import java.util.ArrayList;
@@ -102,6 +103,12 @@ public class ArtistsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Artist>> call, Response<List<Artist>> response) {
                 artistsList = response.body();
+
+                // добавить сохранение в отдельном потоке
+                final SQLiteHelper sqLiteHelper = new SQLiteHelper(getActivity().getApplicationContext());
+                sqLiteHelper.onUpgrade(sqLiteHelper.getWritableDatabase(), 1, 1);
+                sqLiteHelper.insertArtistsInDB(artistsList);
+
                 artistsAdapter = new ArtistsAdapter(artistsList);
                 initListItemsView();
             }

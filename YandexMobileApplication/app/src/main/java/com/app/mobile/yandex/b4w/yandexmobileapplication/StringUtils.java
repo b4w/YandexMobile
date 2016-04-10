@@ -11,9 +11,11 @@ public class StringUtils {
     public static String getStringFromStringArray(String[] inputArray) {
         StringBuilder sb = new StringBuilder();
         sb.append(inputArray[0]);
-        for (int i = 1; i < inputArray.length; i++) {
-            sb.append(", ");
-            sb.append(inputArray[i]);
+        if (inputArray.length > 1) {
+            for (int i = 1; i < inputArray.length; i++) {
+                sb.append(", ");
+                sb.append(inputArray[i]);
+            }
         }
         return sb.toString();
     }
