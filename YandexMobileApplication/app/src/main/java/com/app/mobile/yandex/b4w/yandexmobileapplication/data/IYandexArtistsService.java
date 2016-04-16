@@ -1,6 +1,6 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.data;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
 
 import java.util.List;
 

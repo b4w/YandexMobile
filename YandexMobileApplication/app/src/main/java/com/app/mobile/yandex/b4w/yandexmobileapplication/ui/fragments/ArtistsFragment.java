@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.util.RecyclerItemClickListener;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.adapters.ArtistsAdapter;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.adapters.ArtistsAdapter;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.IYandexArtistsService;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.SQLiteHelper;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.util.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

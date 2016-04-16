@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.pojo;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo;
 
 /**
  * Created by KonstantinSysoev on 10.04.16.

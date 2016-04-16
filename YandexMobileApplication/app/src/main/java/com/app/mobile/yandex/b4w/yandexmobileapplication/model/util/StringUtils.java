@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.util;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.model.util;
 
 import android.support.annotation.NonNull;
 

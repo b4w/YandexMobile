@@ -11,7 +11,7 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistsFragment;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
 
 /**
  * Created by KonstantinSysoev on 29.03.16.
