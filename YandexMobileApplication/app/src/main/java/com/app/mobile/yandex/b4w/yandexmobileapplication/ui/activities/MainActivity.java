@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.activities;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.activities;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -9,8 +9,8 @@ import android.view.MenuItem;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.IDBConstants;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.fragments.ArtistFragment;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.fragments.ArtistsFragment;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistFragment;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 
 /**

@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.util;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

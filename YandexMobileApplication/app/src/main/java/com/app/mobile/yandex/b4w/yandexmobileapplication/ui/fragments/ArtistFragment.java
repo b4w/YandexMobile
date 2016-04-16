@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.fragments;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments;
 
 import android.app.Fragment;
 import android.content.res.Resources;
@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.StringUtils;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.util.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Cover;

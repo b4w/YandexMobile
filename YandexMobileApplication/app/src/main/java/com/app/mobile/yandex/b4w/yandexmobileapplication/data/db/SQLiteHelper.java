@@ -2,13 +2,15 @@ package com.app.mobile.yandex.b4w.yandexmobileapplication.data.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.StringUtils;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.util.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +41,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         Log.d(TAG, "onUpgrade() done");
     }
 
+//    public void open() {
+//        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+//    }
+
     public void insertArtistsInDB(List<Artist> artists) {
         Log.d(TAG, "insertArtistsInDB() started");
         final SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -60,5 +66,22 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             Log.i(TAG, "Insert into db artist name = " + artist.getName() + " id = " + artist.getId());
         }
         Log.d(TAG, "insertArtistsInDB() done");
+    }
+
+    public List<Artist> getArtists() {
+        Log.d(TAG, "getArtists() started");
+        List<Artist> result = new ArrayList<>();
+        final SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from " + IDBConstants.TABLE_ARTISTS, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+//            result.add(new Artist());
+            cursor.moveToNext();
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        Log.d(TAG, "getArtists() done");
+        return result;
     }
 }

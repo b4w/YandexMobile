@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.fragments;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.RecyclerItemClickListener;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.util.RecyclerItemClickListener;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.adapters.ArtistsAdapter;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.IYandexArtistsService;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.SQLiteHelper;
@@ -108,6 +108,7 @@ public class ArtistsFragment extends Fragment {
                 final SQLiteHelper sqLiteHelper = new SQLiteHelper(getActivity().getApplicationContext());
                 sqLiteHelper.onUpgrade(sqLiteHelper.getWritableDatabase(), 1, 1);
                 sqLiteHelper.insertArtistsInDB(artistsList);
+                sqLiteHelper.close();
 
                 artistsAdapter = new ArtistsAdapter(artistsList);
                 initListItemsView();

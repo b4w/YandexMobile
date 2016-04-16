@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.StringUtils;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.util.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
