@@ -2,34 +2,47 @@ package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.activities;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.IDBConstants;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.network.YandexRetrofitSpiceRequest;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
  * Created by KonstantinSysoev on 29.03.16.
  * <p/>
  * ArtistsActivity - activity for display of the loaded list of actors.
  */
-public class MainActivity extends AppCompatActivity implements ArtistsFragment.IOpenViewArtistCallback {
+public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenViewArtistCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final int LAYOUT = R.layout.activity_main;
 
+    private YandexRetrofitSpiceRequest yandexRetrofitSpiceRequest;
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LAYOUT);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        setContentView(R.layout.activity_main);
         updateToolbar();
         initArtistsFragment();
+        yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getSpiceManager().execute(yandexRetrofitSpiceRequest, "yandex", DurationInMillis.ONE_MINUTE,
+                new YandexRequestListener());
     }
 
     @Override
@@ -79,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements ArtistsFragment.I
         final FragmentManager fragmentManager = getFragmentManager();
         final ArtistsFragment fragment = ArtistsFragment.getInstance();
         fragmentManager.beginTransaction()
-                .add(R.id.fragments_container, fragment)
+                .add(R.id.fragments_container, fragment, ArtistsFragment.class.getSimpleName())
                 .addToBackStack(ArtistsFragment.class.getSimpleName())
                 .commit();
         Log.d(TAG, "initArtistsFragment() done");
@@ -91,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ArtistsFragment.I
         final ArtistFragment fragment = ArtistFragment.getInstance();
         fragment.setArguments(getBundleForFragment(artist));
         fragmentManager.beginTransaction()
-                .replace(R.id.fragments_container, fragment)
+                .replace(R.id.fragments_container, fragment, ArtistFragment.class.getSimpleName())
                 .addToBackStack(ArtistFragment.class.getSimpleName())
                 .commit();
     }
@@ -116,5 +129,32 @@ public class MainActivity extends AppCompatActivity implements ArtistsFragment.I
         bundle.putString(IDBConstants.COVER_BIG, artist.getCover().getBig());
         Log.d(TAG, "getBundleForFragment() done");
         return bundle;
+    }
+
+    /**
+     * Async request listener for obtaining response.
+     * Return List<Artist> or error.
+     */
+    public final class YandexRequestListener implements RequestListener<Artist.List> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Log.d(TAG, "onRequestFailure() started");
+            // TODO: add Sneckbar!
+            String test = "";
+            Log.d(TAG, "onRequestFailure() done");
+        }
+
+        @Override
+        public void onRequestSuccess(Artist.List artists) {
+            Log.d(TAG, "onRequestSuccess() started. Collect " + artists.size() + " elements.");
+            ArtistsFragment fragment = (ArtistsFragment) getFragmentManager()
+                    .findFragmentByTag(ArtistsFragment.class.getSimpleName());
+            if (fragment == null) {
+                fragment = ArtistsFragment.getInstance();
+            }
+            fragment.setArtistsList(artists);
+            Log.d(TAG, "onRequestSuccess() done");
+        }
     }
 }

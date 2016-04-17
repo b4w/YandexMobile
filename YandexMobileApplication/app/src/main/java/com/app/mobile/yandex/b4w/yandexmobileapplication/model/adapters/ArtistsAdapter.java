@@ -70,7 +70,10 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return artists.size();
+        int size = 0;
+        if (artists != null)
+            size = artists.size();
+        return size;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

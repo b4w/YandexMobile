@@ -14,18 +14,9 @@ import android.view.ViewGroup;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.adapters.ArtistsAdapter;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.data.IYandexArtistsService;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.SQLiteHelper;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.util.RecyclerItemClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by KonstantinSysoev on 05.04.16.
@@ -58,7 +49,6 @@ public class ArtistsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadData();
     }
 
     @Override
@@ -81,55 +71,28 @@ public class ArtistsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initListItemsView();
     }
 
-    /**
-     * Load tmp data artists list.
-     */
-    private void loadData() {
-        Log.d(TAG, "loadData() started");
-        artistsList = new ArrayList<>();
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateArtistsList();
+    }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(IYandexArtistsService.YA_ARTISTS_LINK)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        IYandexArtistsService iYandexArtistsService = retrofit.create(IYandexArtistsService.class);
-        Call<List<Artist>> call = iYandexArtistsService.loadArtists();
-
-        call.enqueue(new Callback<List<Artist>>() {
-            @Override
-            public void onResponse(Call<List<Artist>> call, Response<List<Artist>> response) {
-                artistsList = response.body();
-
-                // добавить сохранение в отдельном потоке
-                final SQLiteHelper sqLiteHelper = new SQLiteHelper(getActivity().getApplicationContext());
-                sqLiteHelper.onUpgrade(sqLiteHelper.getWritableDatabase(), 1, 1);
-                sqLiteHelper.insertArtistsInDB(artistsList);
-                sqLiteHelper.close();
-
-                artistsAdapter = new ArtistsAdapter(artistsList);
-                initListItemsView();
-            }
-
-            @Override
-            public void onFailure(Call<List<Artist>> call, Throwable t) {
-                // TODO: добавить snackbar
-                // Snackbar.make(R.layout.fragment_artists, "TEST", Snackbar.LENGTH_LONG).show();
-                Log.e(TAG, "Error when request to http json");
-            }
-        });
-        Log.d(TAG, "loadData() done");
+    public void setArtistsList(List<Artist> artistsList) {
+        this.artistsList = artistsList;
+        artistsAdapter = new ArtistsAdapter(artistsList);
+        updateArtistsList();
     }
 
     /**
      * Initialize artists view list.
      */
-    private void initListItemsView() {
-        Log.d(TAG, "initListItemsView() started");
-        artists = (RecyclerView) getActivity().findViewById(R.id.artists);
+    public void updateArtistsList() {
+        Log.d(TAG, "updateArtistsList() started");
+        if (artists == null) {
+            artists = (RecyclerView) getActivity().findViewById(R.id.artists);
+        }
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity().getApplicationContext());
         artists.setLayoutManager(manager);
         artists.setAdapter(artistsAdapter);
@@ -140,6 +103,6 @@ public class ArtistsFragment extends Fragment {
                 iOpenViewArtistCallback.openViewArtist(artistsList.get(position));
             }
         }));
-        Log.d(TAG, "initListItemsView() done");
+        Log.d(TAG, "updateArtistsList() done");
     }
 }

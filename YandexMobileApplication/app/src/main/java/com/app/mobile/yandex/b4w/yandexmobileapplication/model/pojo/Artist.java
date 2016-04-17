@@ -1,5 +1,7 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo;
 
+import java.util.ArrayList;
+
 /**
  * Created by KonstantinSysoev on 02.04.16.
  * <p/>
@@ -29,6 +31,9 @@ public class Artist {
         this.link = link;
         this.description = description;
         this.cover = cover;
+    }
+
+    public static class List extends ArrayList<Artist> {
     }
 
     public int getId() {
