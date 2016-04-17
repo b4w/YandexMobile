@@ -1,22 +1,24 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.adapters.ArtistsAdapter;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.util.RecyclerItemClickListener;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.adapters.ArtistsCursorAdapter;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.DBCursorLoader;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.adapters.ArtistsAdapter;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 
-import java.util.List;
 
 /**
  * Created by KonstantinSysoev on 05.04.16.
@@ -31,11 +33,12 @@ public class ArtistsFragment extends Fragment {
     }
 
     private static final String TAG = ArtistsFragment.class.getSimpleName();
+    public static final int LOADER_ID = 1;
 
     private RecyclerView artists;
     private ArtistsAdapter artistsAdapter;
-    private List<Artist> artistsList;
     private IOpenViewArtistCallback iOpenViewArtistCallback;
+    private ArtistsCursorAdapter artistsCursorAdapter;
 
     /**
      * Return new instance ArtistsFragment.
@@ -49,6 +52,13 @@ public class ArtistsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        artistsCursorAdapter = new ArtistsCursorAdapter(new ArtistsCursorAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(Artist artist) {
+                iOpenViewArtistCallback.openViewArtist(artist);
+            }
+        });
+        getLoaderManager().restartLoader(LOADER_ID, null, new LoaderCallbackCursor());
     }
 
     @Override
@@ -71,38 +81,26 @@ public class ArtistsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateArtistsList();
-    }
-
-    public void setArtistsList(List<Artist> artistsList) {
-        this.artistsList = artistsList;
-        artistsAdapter = new ArtistsAdapter(artistsList);
-        updateArtistsList();
-    }
-
-    /**
-     * Initialize artists view list.
-     */
-    public void updateArtistsList() {
-        Log.d(TAG, "updateArtistsList() started");
-        if (artists == null) {
-            artists = (RecyclerView) getActivity().findViewById(R.id.artists);
-        }
+        artists = (RecyclerView) getActivity().findViewById(R.id.artists);
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity().getApplicationContext());
         artists.setLayoutManager(manager);
-        artists.setAdapter(artistsAdapter);
-        artists.addOnItemTouchListener(new RecyclerItemClickListener(getActivity().getApplicationContext(), new RecyclerItemClickListener.IOnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                // можно доставать из бд через picasso image и передавать ее здесь через view.findViewById(R.id.cover_big)
-                iOpenViewArtistCallback.openViewArtist(artistsList.get(position));
-            }
-        }));
-        Log.d(TAG, "updateArtistsList() done");
+        artists.setAdapter(artistsCursorAdapter);
+    }
+
+    class LoaderCallbackCursor implements LoaderManager.LoaderCallbacks<Cursor> {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new DBCursorLoader(getActivity(), getActivity().getContentResolver());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            artistsCursorAdapter.swapCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            artistsCursorAdapter.swapCursor(null);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.data.db;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.model.db;
 
 /**
  * Created by KonstantinSysoev on 09.04.16.

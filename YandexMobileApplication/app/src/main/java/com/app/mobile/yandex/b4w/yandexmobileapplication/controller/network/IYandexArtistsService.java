@@ -1,6 +1,6 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.model.network;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 
 /**
  * Created by KonstantinSysoev on 09.04.16.

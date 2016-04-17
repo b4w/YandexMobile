@@ -1,8 +1,8 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.activities;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.network.YandexRetrofitSpiceService;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network.YandexRetrofitSpiceService;
 import com.octo.android.robospice.SpiceManager;
 
 /**

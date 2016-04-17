@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo;
 
 import java.util.ArrayList;
 

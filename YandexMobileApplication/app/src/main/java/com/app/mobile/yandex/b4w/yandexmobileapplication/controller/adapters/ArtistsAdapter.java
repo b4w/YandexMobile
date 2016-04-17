@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.model.adapters;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.controller.adapters;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.util.StringUtils;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.squareup.picasso.Picasso;
 

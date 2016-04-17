@@ -11,11 +11,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:name=".model.content.YandexDBContentProvider"
+            android:authorities="com.b4w.provider.yandexmobileapplication" />
+
         <service
-            android:name=".model.network.YandexRetrofitSpiceService"
+            android:name=".controller.network.YandexRetrofitSpiceService"
             android:exported="false" />
 
-        <activity android:name=".ui.activities.MainActivity">
+        <activity android:name=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.model.network;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network;
 
 import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 

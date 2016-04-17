@@ -1,4 +1,4 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.data.db;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.model.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.util.StringUtils;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 
 import java.util.ArrayList;
 import java.util.List;

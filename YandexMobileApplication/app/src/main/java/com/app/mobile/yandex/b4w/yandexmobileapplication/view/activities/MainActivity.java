@@ -1,6 +1,9 @@
-package com.app.mobile.yandex.b4w.yandexmobileapplication.ui.activities;
+package com.app.mobile.yandex.b4w.yandexmobileapplication.view.activities;
 
 import android.app.FragmentManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -8,11 +11,14 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.data.db.IDBConstants;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.network.YandexRetrofitSpiceRequest;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistFragment;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.ui.fragments.ArtistsFragment;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.YandexDBContentProvider;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.SQLiteHelper;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network.YandexRetrofitSpiceRequest;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistFragment;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistsFragment;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -140,7 +146,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             Log.d(TAG, "onRequestFailure() started");
-            // TODO: add Sneckbar!
+            // TODO: add Sneckbar and load saved data from DB!
             String test = "";
             Log.d(TAG, "onRequestFailure() done");
         }
@@ -148,12 +154,25 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         @Override
         public void onRequestSuccess(Artist.List artists) {
             Log.d(TAG, "onRequestSuccess() started. Collect " + artists.size() + " elements.");
-            ArtistsFragment fragment = (ArtistsFragment) getFragmentManager()
-                    .findFragmentByTag(ArtistsFragment.class.getSimpleName());
-            if (fragment == null) {
-                fragment = ArtistsFragment.getInstance();
+            ContentResolver contentResolver = getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            for (Artist artist : artists) {
+                contentValues.put(IDBConstants.ID, artist.getId());
+                contentValues.put(IDBConstants.NAME, artist.getName());
+                contentValues.put(IDBConstants.GENRES, artist.getGenres().length > 0 ?
+                        StringUtils.getStringFromStringArray(artist.getGenres()) : "");
+                contentValues.put(IDBConstants.ALBUMS, artist.getAlbums());
+                contentValues.put(IDBConstants.TRACKS, artist.getTracks());
+                contentValues.put(IDBConstants.LINK, artist.getLink() != null ? artist.getLink() : "");
+                contentValues.put(IDBConstants.DESCRIPTION, artist.getDescription());
+                contentValues.put(IDBConstants.COVER_SMALL, artist.getCover().getSmall());
+                contentValues.put(IDBConstants.COVER_BIG, artist.getCover().getBig());
+                contentValues.put(IDBConstants.COVER_SMALL_PATH, "");
+                contentValues.put(IDBConstants.COVER_BIG_PATH, "");
+                Uri urowUri = contentResolver.insert(YandexDBContentProvider.CONTENT_URI, contentValues);
+//                getLoaderManager().getLoader(1).forceLoad();
+                Log.i(TAG, "Insert into db artist name = " + artist.getName() + " id = " + artist.getId());
             }
-            fragment.setArtistsList(artists);
             Log.d(TAG, "onRequestSuccess() done");
         }
     }
