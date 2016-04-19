@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Cover;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 import com.squareup.picasso.Picasso;
 
@@ -95,9 +96,9 @@ public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCurso
             name.setText(cursorName);
             genres.setText(cursorGenres);
             albums.setText(String.format(resources.getString(R.string.album_message), cursorAlbums,
-                    resources.getString(R.string.albums_genitive)));
+                    StringUtils.getWordEnding(cursorAlbums, StringUtils.ALBUMS)));
             tracks.setText(String.format(resources.getString(R.string.track_message), cursorTracks,
-                    resources.getString(R.string.tracks_genitive)));
+                    StringUtils.getWordEnding(cursorTracks, StringUtils.TRACKS)));
         }
 
         /**
