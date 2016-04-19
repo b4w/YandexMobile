@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -13,6 +14,8 @@ import android.util.Log;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.SQLiteHelper;
+
+import java.sql.SQLException;
 
 /**
  * Created by KonstantinSysoev on 17.04.16.
@@ -97,18 +100,30 @@ public class YandexDBContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         Log.d(TAG, "insert() started");
         String nullColumnHack = null;
-        Uri insertedId = null;
+        // при обновлении значения отдается тот же uri, который пришел или заменяется новым.
+        Uri insertedId = uri;
+        int numberOfRows = 0;
+        final SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
 
-        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
-
-        long id = db.insert(IDBConstants.TABLE_ARTISTS, nullColumnHack, values);
-        if (id > -1) {
-            insertedId = ContentUris.withAppendedId(CONTENT_URI, id);
-            // TODO: добавить сюда observer вместо null???
-            if (getContext() != null) {
-                getContext().getContentResolver().notifyChange(insertedId, null);
+        try {
+            long id = db.insertOrThrow(IDBConstants.TABLE_ARTISTS, nullColumnHack, values);
+            if (id > -1) {
+                insertedId = ContentUris.withAppendedId(CONTENT_URI, id);
+                // TODO: добавить сюда observer вместо null???
+                if (getContext() != null) {
+                    getContext().getContentResolver().notifyChange(insertedId, null);
+                }
             }
+            // TODO: добавить закрытие database?
+            db.close();
+        } catch (SQLiteConstraintException e) {
+            numberOfRows = update(uri, values, null, null);
         }
+
+        if (numberOfRows == 0) {
+            // TODO: Добавить ошибку snackbar!
+        }
+//        getContext().getContentResolver().notifyChange(uri, null, false);
         Log.d(TAG, "insert() done");
         return insertedId;
     }
@@ -124,8 +139,8 @@ public class YandexDBContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         Log.d(TAG, "update() started");
-        // TODO: Надо реализовывать?
-        Log.d(TAG, "update() done");
-        return 0;
+        final SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        return db.update(IDBConstants.TABLE_ARTISTS, values, IDBConstants.ID + "=?",
+                new String[]{values.getAsString(IDBConstants.ID)});
     }
 }
