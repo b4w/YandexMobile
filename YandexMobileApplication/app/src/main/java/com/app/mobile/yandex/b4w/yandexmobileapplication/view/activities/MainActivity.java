@@ -5,15 +5,16 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.RelativeLayout;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.YandexDBContentProvider;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.SQLiteHelper;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network.YandexRetrofitSpiceRequest;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistFragment;
@@ -33,12 +34,14 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
 
     private YandexRetrofitSpiceRequest yandexRetrofitSpiceRequest;
     private Toolbar toolbar;
+    private RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
+        relativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
         updateToolbar();
         initArtistsFragment();
         yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
@@ -53,6 +56,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
 
     @Override
     public void onBackPressed() {
+        updateToolbar();
         int count = getFragmentManager().getBackStackEntryCount();
         if (count == 0) {
             super.onBackPressed();
@@ -64,7 +68,6 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            updateToolbar();
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
@@ -146,8 +149,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             Log.d(TAG, "onRequestFailure() started");
-            // TODO: add Sneckbar and load saved data from DB!
-            String test = "";
+            Snackbar.make(relativeLayout, getString(R.string.robospice_error), Snackbar.LENGTH_LONG).show();
             Log.d(TAG, "onRequestFailure() done");
         }
 
