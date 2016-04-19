@@ -91,12 +91,14 @@ public class ArtistFragment extends Fragment {
         Picasso.with(getActivity().getApplicationContext())
                 .load(artist.getCover().getBig())
                 .placeholder(R.drawable.load_holder)
+                .fit()
+                .centerCrop()
                 .into(coverBig);
         genres.setText(StringUtils.getStringFromStringArray(artist.getGenres()));
         albums.setText(String.format(resources.getString(R.string.album_message_artist), artist.getAlbums(),
-                resources.getString(R.string.albums_genitive)));
+                StringUtils.getWordEnding(artist.getAlbums(), StringUtils.ALBUMS)));
         tracks.setText(String.format(resources.getString(R.string.track_message), artist.getTracks(),
-                resources.getString(R.string.tracks_genitive)));
+                StringUtils.getWordEnding(artist.getTracks(), StringUtils.TRACKS)));
         description.setText(artist.getDescription());
         Log.d(TAG, "setArtistValues() done");
     }
