@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
     public void onBackPressed() {
         updateToolbar();
         int count = getFragmentManager().getBackStackEntryCount();
-        if (count == 0) {
+        if (count == 1) {
             super.onBackPressed();
         } else {
             getFragmentManager().popBackStack();
