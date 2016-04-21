@@ -1,5 +1,6 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
@@ -27,6 +28,10 @@ import com.squareup.picasso.Picasso;
  */
 public class ArtistFragment extends Fragment {
 
+    public interface IOpenOfficialSiteCallback {
+        void openOfficialSiteLinkInBrowser(String link);
+    }
+
     private static final String TAG = ArtistFragment.class.getSimpleName();
 
     private ImageView coverBig;
@@ -34,7 +39,9 @@ public class ArtistFragment extends Fragment {
     private TextView albums;
     private TextView tracks;
     private TextView description;
+    private TextView link;
     private Artist artist;
+    private IOpenOfficialSiteCallback iOpenOfficialSiteCallback;
 
     /**
      * Return new instance ArtistFragment.
@@ -48,6 +55,16 @@ public class ArtistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            iOpenOfficialSiteCallback = (IOpenOfficialSiteCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement IOpenOfficialSiteCallback");
+        }
     }
 
     @Nullable
@@ -66,6 +83,7 @@ public class ArtistFragment extends Fragment {
         initXmlFields();
         setArtistValues();
         initToolbar();
+        initListeners();
     }
 
     /**
@@ -78,6 +96,7 @@ public class ArtistFragment extends Fragment {
         albums = (TextView) getActivity().findViewById(R.id.artist_albums);
         tracks = (TextView) getActivity().findViewById(R.id.artist_tracks);
         description = (TextView) getActivity().findViewById(R.id.artist_description);
+        link = (TextView) getActivity().findViewById(R.id.artist_link);
         Log.d(TAG, "initXmlFields() done");
     }
 
@@ -100,6 +119,9 @@ public class ArtistFragment extends Fragment {
         tracks.setText(String.format(resources.getString(R.string.track_message), artist.getTracks(),
                 StringUtils.getWordEnding(artist.getTracks(), StringUtils.TRACKS)));
         description.setText(artist.getDescription());
+        link.setText((artist.getLink() != null && !artist.getLink().isEmpty())
+                ? getString(R.string.official_site) + "\n" + artist.getLink()
+                : "");
         Log.d(TAG, "setArtistValues() done");
     }
 
@@ -138,5 +160,19 @@ public class ArtistFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Log.d(TAG, "initToolbar() done");
+    }
+
+    /**
+     * Initialize listeners for ArtistFragment.
+     */
+    private void initListeners() {
+        Log.d(TAG, "initListeners() started");
+        link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iOpenOfficialSiteCallback.openOfficialSiteLinkInBrowser(artist.getLink());
+            }
+        });
+        Log.d(TAG, "initListeners() done");
     }
 }

@@ -9,4 +9,5 @@
     <color name="textToolbarHeading">#FFF</color>
     <color name="textColorPrimary">#000</color>
     <color name="textColorSecondary">#B3B3B3</color>
+    <color name="textLinkColor">#1d21fd</color>
 </resources>

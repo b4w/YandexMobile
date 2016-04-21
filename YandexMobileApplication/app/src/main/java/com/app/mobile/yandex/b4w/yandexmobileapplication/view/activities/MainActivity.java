@@ -20,6 +20,7 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringU
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.OfficialSiteFragment;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -29,7 +30,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * <p/>
  * ArtistsActivity - activity for display of the loaded list of actors.
  */
-public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenViewArtistCallback {
+public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenViewArtistCallback,
+        ArtistFragment.IOpenOfficialSiteCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private YandexRetrofitSpiceRequest yandexRetrofitSpiceRequest;
@@ -107,6 +109,11 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         Log.d(TAG, "initArtistsFragment() done");
     }
 
+    /**
+     * Open full view artist.
+     *
+     * @param artist for full view.
+     */
     @Override
     public void openViewArtist(Artist artist) {
         final FragmentManager fragmentManager = getFragmentManager();
@@ -115,6 +122,21 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         fragmentManager.beginTransaction()
                 .replace(R.id.fragments_container, fragment, ArtistFragment.class.getSimpleName())
                 .addToBackStack(ArtistFragment.class.getSimpleName())
+                .commit();
+    }
+
+    /**
+     * Open official site in browser.
+     *
+     * @param link to official page.
+     */
+    @Override
+    public void openOfficialSiteLinkInBrowser(String link) {
+        final FragmentManager fragmentManager = getFragmentManager();
+        final OfficialSiteFragment fragment = OfficialSiteFragment.getInstance(link);
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragments_container, fragment, OfficialSiteFragment.class.getSimpleName())
+                .addToBackStack(OfficialSiteFragment.class.getSimpleName())
                 .commit();
     }
 

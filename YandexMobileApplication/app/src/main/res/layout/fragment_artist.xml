@@ -72,6 +72,13 @@
                 android:layout_below="@+id/artist_biography"
                 android:textColor="?android:textColorPrimary" />
 
+            <TextView
+                android:id="@+id/artist_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/artist_description"
+                android:textColorLink="@color/textLinkColor"/>
+
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

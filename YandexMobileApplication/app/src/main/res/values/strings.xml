@@ -7,7 +7,6 @@
     <string name="biography_capital">Биография</string>
 
     <!--Code-->
-    <!--TODO: падеж сделать с помощью Quantity Strings (Plurals)-->
     <string name="album">альбом</string>
     <string name="albums_genitive">альбомов</string>
     <string name="track">песня</string>
@@ -16,4 +15,5 @@
     <string name="album_message_artist">%1$d %2$s</string>
     <string name="track_message">%1$d %2$s</string>
     <string name="robospice_error">Ошибка передачи данных</string>
+    <string name="official_site">Официальный сайт:</string>
 </resources>
