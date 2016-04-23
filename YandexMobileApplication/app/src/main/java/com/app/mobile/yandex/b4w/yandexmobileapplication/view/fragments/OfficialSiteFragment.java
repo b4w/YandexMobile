@@ -1,22 +1,25 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebViewFragment;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
+import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 
 /**
  * Created by KonstantinSysoev on 21.04.16.
  * Fragment for opening official site by link in browser.
  */
-public class OfficialSiteFragment extends WebViewFragment {
+public class OfficialSiteFragment extends Fragment {
     private static final String TAG = OfficialSiteFragment.class.getSimpleName();
 
-    private String link;
+    private WebView webView;
 
     /**
      * Return new instance OfficialSiteFragment.
@@ -33,14 +36,35 @@ public class OfficialSiteFragment extends WebViewFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView() started");
-        View result = super.onCreateView(inflater, container, savedInstanceState);
+        final View view = inflater.inflate(R.layout.fragment_off_site, container, false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        webView = (WebView) getActivity().findViewById(R.id.off_site_web_view);
+        initWebView();
+    }
+
+    /**
+     * Initialize webView for opening official site.
+     */
+    private void initWebView() {
+        Log.d(TAG, "initWebView() started");
+        // open within WebView not a default browser
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
         // added JavaScript and screen zooming
-        getWebView().getSettings().setJavaScriptEnabled(true);
-        getWebView().getSettings().setSupportZoom(true);
-        getWebView().getSettings().setBuiltInZoomControls(true);
-        getWebView().loadUrl(getArguments().getString(IDBConstants.LINK));
-        Log.d(TAG, "onCreateView() done");
-        return result;
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.loadUrl(getArguments().getString(IDBConstants.LINK));
+        Log.d(TAG, "initWebView() done");
     }
 }
