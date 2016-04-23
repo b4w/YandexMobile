@@ -18,6 +18,8 @@ import com.squareup.picasso.Picasso;
 
 /**
  * Created by KonstantinSysoev on 17.04.16.
+ * <p/>
+ * Artists cursor adapter for display artists list.
  */
 public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCursorAdapter.ViewHolder>
         implements View.OnClickListener {
@@ -54,6 +56,12 @@ public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCurso
         }
     }
 
+    /**
+     * Get new obj Artist(); from cursor.
+     *
+     * @param cursor
+     * @return new Artist();
+     */
     private Artist getArtistByCursor(final Cursor cursor) {
         return new Artist(cursor.getInt(cursor.getColumnIndex(IDBConstants.ID)),
                 cursor.getString(cursor.getColumnIndex(IDBConstants.NAME)),
@@ -68,7 +76,6 @@ public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCurso
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        // TODO: добавить coverBig для хранения фотографии?
         private ImageView coverSmall;
         private TextView name;
         private TextView genres;

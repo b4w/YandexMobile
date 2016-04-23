@@ -16,4 +16,5 @@
     <string name="track_message">%1$d %2$s</string>
     <string name="robospice_error">Ошибка передачи данных</string>
     <string name="official_site">Официальный сайт:</string>
+    <string name="data_successfully_updated">Данные успешно обновлены</string>
 </resources>

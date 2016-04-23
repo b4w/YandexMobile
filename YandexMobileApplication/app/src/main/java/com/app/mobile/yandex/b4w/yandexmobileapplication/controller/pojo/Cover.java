@@ -2,6 +2,8 @@ package com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo;
 
 /**
  * Created by KonstantinSysoev on 10.04.16.
+ * <p/>
+ * Pojo class for Cover entity.
  */
 public class Cover {
 

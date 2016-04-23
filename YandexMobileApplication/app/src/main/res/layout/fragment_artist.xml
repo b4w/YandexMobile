@@ -73,11 +73,20 @@
                 android:textColor="?android:textColorPrimary" />
 
             <TextView
-                android:id="@+id/artist_link"
+                android:id="@+id/artist_label_link"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/artist_description"
-                android:textColorLink="@color/textLinkColor"/>
+                android:paddingTop="5dp"
+                android:text="@string/official_site"
+                android:textColor="?android:textColorPrimary" />
+
+            <TextView
+                android:id="@+id/artist_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/artist_label_link"
+                android:textColor="@color/textLinkColor" />
 
         </RelativeLayout>
     </LinearLayout>

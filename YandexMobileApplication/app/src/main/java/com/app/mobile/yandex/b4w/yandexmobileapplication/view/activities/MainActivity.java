@@ -200,6 +200,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
 //                getLoaderManager().getLoader(1).forceLoad();
                 Log.i(TAG, "Insert into db artist name = " + artist.getName() + " id = " + artist.getId());
             }
+            Snackbar.make(relativeLayout, getString(R.string.data_successfully_updated), Snackbar.LENGTH_LONG).show();
             Log.d(TAG, "onRequestSuccess() done");
         }
     }

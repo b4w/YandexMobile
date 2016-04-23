@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 
 /**
  * Created by KonstantinSysoev on 17.04.16.
+ * <p/>
+ * Abstract class for ArtistCursorAdapter.
  */
 public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH> {

@@ -16,12 +16,13 @@ import android.view.ViewGroup;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.adapters.ArtistsCursorAdapter;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.DBCursorLoader;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.adapters.ArtistsAdapter;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 
 
 /**
  * Created by KonstantinSysoev on 05.04.16.
+ * <p/>
+ * Class fragment for display list artists.
  */
 public class ArtistsFragment extends Fragment {
 
@@ -36,7 +37,6 @@ public class ArtistsFragment extends Fragment {
     public static final int LOADER_ID = 1;
 
     private RecyclerView artists;
-    private ArtistsAdapter artistsAdapter;
     private IOpenViewArtistCallback iOpenViewArtistCallback;
     private ArtistsCursorAdapter artistsCursorAdapter;
 
@@ -87,6 +87,9 @@ public class ArtistsFragment extends Fragment {
         artists.setAdapter(artistsCursorAdapter);
     }
 
+    /**
+     * Class for callbacks DBCursorLoader after data loading.
+     */
     class LoaderCallbackCursor implements LoaderManager.LoaderCallbacks<Cursor> {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {

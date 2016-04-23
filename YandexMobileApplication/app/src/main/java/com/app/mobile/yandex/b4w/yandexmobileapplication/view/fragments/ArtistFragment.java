@@ -25,9 +25,14 @@ import com.squareup.picasso.Picasso;
 
 /**
  * Created by KonstantinSysoev on 06.04.16.
+ * <p/>
+ * Class fragment for display artist view.
  */
 public class ArtistFragment extends Fragment {
 
+    /**
+     * Interface for open official site in browser.
+     */
     public interface IOpenOfficialSiteCallback {
         void openOfficialSiteLinkInBrowser(String link);
     }
@@ -40,6 +45,7 @@ public class ArtistFragment extends Fragment {
     private TextView tracks;
     private TextView description;
     private TextView link;
+    private TextView labelLink;
     private Artist artist;
     private IOpenOfficialSiteCallback iOpenOfficialSiteCallback;
 
@@ -97,6 +103,8 @@ public class ArtistFragment extends Fragment {
         tracks = (TextView) getActivity().findViewById(R.id.artist_tracks);
         description = (TextView) getActivity().findViewById(R.id.artist_description);
         link = (TextView) getActivity().findViewById(R.id.artist_link);
+        labelLink = (TextView) getActivity().findViewById(R.id.artist_label_link);
+        labelLink.setVisibility(View.INVISIBLE);
         Log.d(TAG, "initXmlFields() done");
     }
 
@@ -105,7 +113,6 @@ public class ArtistFragment extends Fragment {
      */
     private void setArtistValues() {
         Log.d(TAG, "setArtistValues() started");
-        // TODO: заменить picasso
         final Resources resources = getActivity().getResources();
         Picasso.with(getActivity().getApplicationContext())
                 .load(artist.getCover().getBig())
@@ -119,9 +126,14 @@ public class ArtistFragment extends Fragment {
         tracks.setText(String.format(resources.getString(R.string.track_message), artist.getTracks(),
                 StringUtils.getWordEnding(artist.getTracks(), StringUtils.TRACKS)));
         description.setText(artist.getDescription());
-        link.setText((artist.getLink() != null && !artist.getLink().isEmpty())
-                ? getString(R.string.official_site) + "\n" + artist.getLink()
-                : "");
+        // added link to official site page
+        if (artist.getLink() != null && !artist.getLink().isEmpty()) {
+            labelLink.setVisibility(View.VISIBLE);
+            link.setText(artist.getLink()
+                    .replace("http://", "")
+                    .replace("www.", "")
+                    .replace("/", ""));
+        }
         Log.d(TAG, "setArtistValues() done");
     }
 

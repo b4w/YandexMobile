@@ -64,9 +64,9 @@ public class YandexDBContentProvider extends ContentProvider {
                 String rowID = uri.getPathSegments().get(1);
                 sqLiteQueryBuilder.appendWhere(IDBConstants.ID + "=" + rowID);
                 break;
-//            default:
-//                Log.w(TAG, "YandexDBContentProvider. Not correct request to data base!");
-//                break;
+            default:
+                Log.w(TAG, "YandexDBContentProvider. Not correct request to data base!");
+                break;
         }
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, groupBy, having, sortOrder);
 //        cursor.setNotificationUri();
@@ -81,11 +81,9 @@ public class YandexDBContentProvider extends ContentProvider {
         String resultType;
         switch (URI_MATCHER.match(uri)) {
             case ALL_ROWS:
-//                resultType = "vnd.android.cursor.dir/vnd.b4w.provider.yandexmobileapplication/elements";
                 resultType = "vnd.android.cursor.dir/vnd.b4w/elements";
                 break;
             case SINGLE_ROW:
-//                resultType = "vnd.android.cursor.item/vnd.b4w.provider.yandexmobileapplication/elements";
                 resultType = "vnd.android.cursor.item/vnd.b4w/elements";
                 break;
             default:
@@ -121,7 +119,8 @@ public class YandexDBContentProvider extends ContentProvider {
         }
 
         if (numberOfRows == 0) {
-            // TODO: Добавить ошибку snackbar!
+            Log.e(TAG, "It wasn't succeeded to update value in the database! Id = "
+                    + values.getAsString(IDBConstants.ID));
         }
 //        getContext().getContentResolver().notifyChange(uri, null, false);
         Log.d(TAG, "insert() done");

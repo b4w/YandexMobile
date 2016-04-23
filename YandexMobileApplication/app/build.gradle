@@ -41,4 +41,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-retrofit:1.4.14'
+    androidTestCompile 'junit:junit:4.12'
 }

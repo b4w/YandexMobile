@@ -4,14 +4,22 @@ import android.support.annotation.NonNull;
 
 /**
  * Created by KonstantinSysoev on 10.04.16.
+ * <p/>
+ * Class for supplementary methods.
  */
 public class StringUtils {
 
     public static final String[] ALBUMS = {"альбом", "альбома", "альбомов"};
     public static final String[] TRACKS = {"песня", "песни", "песен"};
 
+    /**
+     * Get string partitioned by commas from string array for storage in database.
+     *
+     * @param inputArray
+     * @return new String();
+     */
     @NonNull
-    public static String getStringFromStringArray(String[] inputArray) {
+    public static String getStringFromStringArray(String... inputArray) {
         StringBuilder sb = new StringBuilder();
         sb.append(inputArray[0]);
         if (inputArray.length > 1) {
@@ -23,6 +31,13 @@ public class StringUtils {
         return sb.toString();
     }
 
+    /**
+     * Get the correct termination of the word.
+     *
+     * @param number
+     * @param inputArray
+     * @return String();
+     */
     @NonNull
     public static String getWordEnding(int number, String... inputArray) {
         String result;
