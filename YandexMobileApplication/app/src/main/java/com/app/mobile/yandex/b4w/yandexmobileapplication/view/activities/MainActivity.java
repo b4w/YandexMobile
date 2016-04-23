@@ -58,11 +58,12 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
 
     @Override
     public void onBackPressed() {
-        updateToolbar();
         int count = getFragmentManager().getBackStackEntryCount();
         if (count == 1) {
             super.onBackPressed();
         } else {
+            // update toolbar only if transferred to artists list
+            if (count == 2) updateToolbar();
             getFragmentManager().popBackStack();
         }
     }
@@ -120,6 +121,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         final ArtistFragment fragment = ArtistFragment.getInstance();
         fragment.setArguments(getBundleForFragment(artist));
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_to_right, R.anim.slide_in_right, R.anim.slide_to_left)
                 .replace(R.id.fragments_container, fragment, ArtistFragment.class.getSimpleName())
                 .addToBackStack(ArtistFragment.class.getSimpleName())
                 .commit();
@@ -135,6 +137,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         final FragmentManager fragmentManager = getFragmentManager();
         final OfficialSiteFragment fragment = OfficialSiteFragment.getInstance(link);
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_to_right, R.anim.slide_in_right, R.anim.slide_to_left)
                 .replace(R.id.fragments_container, fragment, OfficialSiteFragment.class.getSimpleName())
                 .addToBackStack(OfficialSiteFragment.class.getSimpleName())
                 .commit();
