@@ -132,6 +132,7 @@ public class ArtistFragment extends Fragment {
             link.setText(artist.getLink()
                     .replace("http://", "")
                     .replace("www.", "")
+                    .replace("www2.", "")
                     .replace("/", ""));
         }
         Log.d(TAG, "setArtistValues() done");

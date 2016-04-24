@@ -1,6 +1,8 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.view.activities;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
@@ -44,8 +46,15 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
         relativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
-        updateToolbar();
-        initArtistsFragment();
+        // check turn of the screen
+        if (savedInstanceState == null) {
+            // screen wasn't turned
+            updateToolbar();
+            updateFragments(getFragmentManager(), ArtistsFragment.getInstance(), false, true);
+        } else {
+            // screen was turned
+            updateFragmentsAfterScreenTurn();
+        }
         yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
     }
 
@@ -97,18 +106,54 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
     }
 
     /**
-     * First initialize ArtistsFragment for artists list.
+     * Initialize or update fragments (Artists, Artist or OfficialSite).
      */
-    private void initArtistsFragment() {
-        Log.d(TAG, "initArtistsFragment() started");
-        final FragmentManager fragmentManager = getFragmentManager();
-        final ArtistsFragment fragment = ArtistsFragment.getInstance();
-        fragmentManager.beginTransaction()
-                .add(R.id.fragments_container, fragment, ArtistsFragment.class.getSimpleName())
-                .addToBackStack(ArtistsFragment.class.getSimpleName())
-                .commit();
-        Log.d(TAG, "initArtistsFragment() done");
+    private void updateFragments(final FragmentManager fragmentManager, final Fragment fragment,
+                                 boolean replace, boolean necessaryAddBackStack) {
+        Log.d(TAG, "updateFragments() started");
+        final FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_to_right, R.anim.slide_in_right, R.anim.slide_to_left);
+        if (replace) {
+            transaction.replace(R.id.fragments_container, fragment, fragment.getClass().getSimpleName());
+        } else {
+            transaction.add(R.id.fragments_container, fragment, fragment.getClass().getSimpleName());
+        }
+        if (necessaryAddBackStack) {
+            transaction.addToBackStack(fragment.getClass().getSimpleName());
+        }
+        transaction.commit();
+        Log.d(TAG, "updateFragments() done");
     }
+
+    /**
+     * Finding old fragment by name and updating them.
+     */
+    private void updateFragmentsAfterScreenTurn() {
+        Log.d(TAG, "updateFragmentsAfterScreenTurn() started");
+        final FragmentManager fragmentManager = getFragmentManager();
+        Fragment fragment;
+        switch (fragmentManager.getBackStackEntryCount()) {
+            // update display Artists fragment
+            case 1:
+                fragment = fragmentManager.findFragmentByTag(ArtistsFragment.class.getSimpleName());
+                break;
+            // update display Artist fragment
+            case 2:
+                fragment = fragmentManager.findFragmentByTag(ArtistFragment.class.getSimpleName());
+                break;
+            // update display Official site fragment
+            case 3:
+                fragment = fragmentManager.findFragmentByTag(OfficialSiteFragment.class.getSimpleName());
+                break;
+            default:
+                fragment = ArtistFragment.getInstance();
+                Snackbar.make(relativeLayout, getString(R.string.robospice_error), Snackbar.LENGTH_LONG).show();
+                break;
+        }
+        updateFragments(fragmentManager, fragment, true, false);
+        Log.d(TAG, "updateFragmentsAfterScreenTurn() done");
+    }
+
 
     /**
      * Open full view artist.
@@ -117,14 +162,9 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
      */
     @Override
     public void openViewArtist(Artist artist) {
-        final FragmentManager fragmentManager = getFragmentManager();
         final ArtistFragment fragment = ArtistFragment.getInstance();
         fragment.setArguments(getBundleForFragment(artist));
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_to_right, R.anim.slide_in_right, R.anim.slide_to_left)
-                .replace(R.id.fragments_container, fragment, ArtistFragment.class.getSimpleName())
-                .addToBackStack(ArtistFragment.class.getSimpleName())
-                .commit();
+        updateFragments(getFragmentManager(), fragment, true, true);
     }
 
     /**
@@ -134,13 +174,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
      */
     @Override
     public void openOfficialSiteLinkInBrowser(String link) {
-        final FragmentManager fragmentManager = getFragmentManager();
-        final OfficialSiteFragment fragment = OfficialSiteFragment.getInstance(link);
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_to_right, R.anim.slide_in_right, R.anim.slide_to_left)
-                .replace(R.id.fragments_container, fragment, OfficialSiteFragment.class.getSimpleName())
-                .addToBackStack(OfficialSiteFragment.class.getSimpleName())
-                .commit();
+        updateFragments(getFragmentManager(), OfficialSiteFragment.getInstance(link), true, true);
     }
 
     /**
@@ -200,7 +234,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
 //                getLoaderManager().getLoader(1).forceLoad();
                 Log.i(TAG, "Insert into db artist name = " + artist.getName() + " id = " + artist.getId());
             }
-            Snackbar.make(relativeLayout, getString(R.string.data_successfully_updated), Snackbar.LENGTH_LONG).show();
+//            Snackbar.make(relativeLayout, getString(R.string.data_successfully_updated), Snackbar.LENGTH_LONG).show();
             Log.d(TAG, "onRequestSuccess() done");
         }
     }
