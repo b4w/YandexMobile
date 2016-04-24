@@ -58,6 +58,11 @@ public class ArtistsFragment extends Fragment {
                 iOpenViewArtistCallback.openViewArtist(artist);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getLoaderManager().restartLoader(LOADER_ID, null, new LoaderCallbackCursor());
     }
 

@@ -18,6 +18,7 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.DBSaveLoader;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network.YandexRetrofitSpiceRequest;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.SQLiteHelper;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
