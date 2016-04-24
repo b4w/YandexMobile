@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by KonstantinSysoev on 24.04.16.
+ * <p/>
+ * Class Loader for save data from yandex json link in background thread.
  */
 public class DBSaveLoader extends Loader<Cursor> {
 
@@ -28,11 +30,6 @@ public class DBSaveLoader extends Loader<Cursor> {
     }
 
     @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-    }
-
-    @Override
     public void forceLoad() {
         super.forceLoad();
         if (artists != null && !artists.isEmpty()) {
@@ -41,26 +38,11 @@ public class DBSaveLoader extends Loader<Cursor> {
         }
     }
 
-    @Override
-    public void stopLoading() {
-        super.stopLoading();
-    }
-
-    @Override
-    protected void onAbandon() {
-        super.onAbandon();
-    }
-
-    @Override
-    protected void onReset() {
-        super.onReset();
-    }
-
     public void setArtists(List<Artist> artists) {
         this.artists = artists;
     }
 
-    private void getResultFromTask (Cursor cursor) {
+    private void getResultFromTask(Cursor cursor) {
         deliverResult(cursor);
     }
 
