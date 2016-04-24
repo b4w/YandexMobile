@@ -9,6 +9,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <!--font-->
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <!--Style for artists list-->

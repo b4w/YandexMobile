@@ -10,5 +10,5 @@
     <color name="textColorPrimary">#000</color>
     <color name="textColorSecondary">#B3B3B3</color>
     <color name="textLinkColor">#1d21fd</color>
-    <color name="dividerLine">#dfdfdf</color>
+    <color name="dividerLine">#e7e7e7</color>
 </resources>
