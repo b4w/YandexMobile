@@ -11,7 +11,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
@@ -43,6 +45,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
     private Toolbar toolbar;
     private RelativeLayout relativeLayout;
     private DBSaveLoaderCallback dbSaveLoaderCallback;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,11 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
         relativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
+
+        // add progressBar
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         updateToolbar();
         // check turn of the screen
         if (savedInstanceState == null) {
@@ -57,6 +65,8 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
             // create Loader for saving data from yandex json link
             dbSaveLoaderCallback = new DBSaveLoaderCallback();
             getSupportLoaderManager().initLoader(SAVE_LOADER_ID, null, dbSaveLoaderCallback);
+
+            progressBar.setVisibility(View.VISIBLE);
 
             updateFragments(getFragmentManager(), ArtistsFragment.getInstance(), false, true);
 
@@ -239,7 +249,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             if (id == SAVE_LOADER_ID) {
-                loader = new DBSaveLoader(getApplicationContext());
+                loader = new DBSaveLoader(getApplicationContext(), progressBar);
             }
             return loader;
         }

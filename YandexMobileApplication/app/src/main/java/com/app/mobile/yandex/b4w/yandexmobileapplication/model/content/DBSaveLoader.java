@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v4.content.Loader;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
@@ -23,10 +25,12 @@ public class DBSaveLoader extends Loader<Cursor> {
     private DBSaveTask saveTask;
     private List<Artist> artists;
     private Context context;
+    private ProgressBar progressBar;
 
-    public DBSaveLoader(Context context) {
+    public DBSaveLoader(Context context, ProgressBar progressBar) {
         super(context);
         this.context = context;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class DBSaveLoader extends Loader<Cursor> {
         deliverResult(cursor);
     }
 
-    class DBSaveTask extends AsyncTask<List<Artist>, Void, Cursor> {
+    class DBSaveTask extends AsyncTask<List<Artist>, Integer, Cursor> {
 
         private ContentResolver contentResolver;
 
@@ -76,8 +80,15 @@ public class DBSaveLoader extends Loader<Cursor> {
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressBar.setProgress(values[0]);
+        }
+
+        @Override
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
+            progressBar.setVisibility(View.INVISIBLE);
             getResultFromTask(cursor);
         }
     }
