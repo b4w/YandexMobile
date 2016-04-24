@@ -88,6 +88,15 @@ public class ArtistsFragment extends Fragment {
     }
 
     /**
+     * Getter cursor adapter for swapCursor();
+     *
+     * @return
+     */
+    public ArtistsCursorAdapter getArtistsCursorAdapter() {
+        return artistsCursorAdapter;
+    }
+
+    /**
      * Class for callbacks DBCursorLoader after data loading.
      */
     class LoaderCallbackCursor implements LoaderManager.LoaderCallbacks<Cursor> {

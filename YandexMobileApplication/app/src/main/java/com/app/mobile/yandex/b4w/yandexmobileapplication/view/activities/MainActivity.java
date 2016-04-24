@@ -3,11 +3,11 @@ package com.app.mobile.yandex.b4w.yandexmobileapplication.view.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,10 +15,9 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.YandexDBContentProvider;
+import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.DBSaveLoader;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network.YandexRetrofitSpiceRequest;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.util.StringUtils;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
@@ -26,6 +25,8 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.Official
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.List;
 
 /**
  * Created by KonstantinSysoev on 29.03.16.
@@ -35,10 +36,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenViewArtistCallback,
         ArtistFragment.IOpenOfficialSiteCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int SAVE_LOADER_ID = 2;
 
     private YandexRetrofitSpiceRequest yandexRetrofitSpiceRequest;
     private Toolbar toolbar;
     private RelativeLayout relativeLayout;
+    private DBSaveLoaderCallback dbSaveLoaderCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,23 +49,24 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
         relativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
+        updateToolbar();
         // check turn of the screen
         if (savedInstanceState == null) {
             // screen wasn't turned
-            updateToolbar();
+            // create Loader for saving data from yandex json link
+            dbSaveLoaderCallback = new DBSaveLoaderCallback();
+            getSupportLoaderManager().initLoader(SAVE_LOADER_ID, null, dbSaveLoaderCallback);
+
             updateFragments(getFragmentManager(), ArtistsFragment.getInstance(), false, true);
+
+            // load data from yandex json link
+            yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
+            getSpiceManager().execute(yandexRetrofitSpiceRequest, "yandex", DurationInMillis.ONE_MINUTE,
+                    new YandexRequestListener());
         } else {
             // screen was turned
             updateFragmentsAfterScreenTurn();
         }
-        yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getSpiceManager().execute(yandexRetrofitSpiceRequest, "yandex", DurationInMillis.ONE_MINUTE,
-                new YandexRequestListener());
     }
 
     @Override
@@ -215,27 +219,60 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         @Override
         public void onRequestSuccess(Artist.List artists) {
             Log.d(TAG, "onRequestSuccess() started. Collect " + artists.size() + " elements.");
-            ContentResolver contentResolver = getContentResolver();
-            ContentValues contentValues = new ContentValues();
-            for (Artist artist : artists) {
-                contentValues.put(IDBConstants.ID, artist.getId());
-                contentValues.put(IDBConstants.NAME, artist.getName());
-                contentValues.put(IDBConstants.GENRES, artist.getGenres().length > 0 ?
-                        StringUtils.getStringFromStringArray(artist.getGenres()) : "");
-                contentValues.put(IDBConstants.ALBUMS, artist.getAlbums());
-                contentValues.put(IDBConstants.TRACKS, artist.getTracks());
-                contentValues.put(IDBConstants.LINK, artist.getLink() != null ? artist.getLink() : "");
-                contentValues.put(IDBConstants.DESCRIPTION, artist.getDescription());
-                contentValues.put(IDBConstants.COVER_SMALL, artist.getCover().getSmall());
-                contentValues.put(IDBConstants.COVER_BIG, artist.getCover().getBig());
-                contentValues.put(IDBConstants.COVER_SMALL_PATH, "");
-                contentValues.put(IDBConstants.COVER_BIG_PATH, "");
-                Uri urowUri = contentResolver.insert(YandexDBContentProvider.CONTENT_URI, contentValues);
-//                getLoaderManager().getLoader(1).forceLoad();
-                Log.i(TAG, "Insert into db artist name = " + artist.getName() + " id = " + artist.getId());
+            if (dbSaveLoaderCallback != null) {
+                // added loaded artists for save in database
+                dbSaveLoaderCallback.updateArtists(artists);
+                // restart loader
+                getSupportLoaderManager().getLoader(SAVE_LOADER_ID).forceLoad();
             }
-//            Snackbar.make(relativeLayout, getString(R.string.data_successfully_updated), Snackbar.LENGTH_LONG).show();
             Log.d(TAG, "onRequestSuccess() done");
+        }
+    }
+
+    /**
+     * Class for callbacks DBSaveLoader after data loading.
+     */
+    public class DBSaveLoaderCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+        private DBSaveLoader loader;
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            if (id == SAVE_LOADER_ID) {
+                loader = new DBSaveLoader(getApplicationContext());
+            }
+            return loader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            Log.d(TAG, "onLoadFinished() started");
+            // update cursor adapter for Artists fragment
+            final FragmentManager fragmentManager = getFragmentManager();
+            final ArtistsFragment fragment = (ArtistsFragment) fragmentManager.findFragmentByTag(ArtistsFragment.class.getSimpleName());
+            if (fragment != null) {
+                fragment.getArtistsCursorAdapter().swapCursor(data);
+            } else {
+                ArtistsFragment.getInstance().getArtistsCursorAdapter().swapCursor(data);
+            }
+            Snackbar.make(relativeLayout, getString(R.string.data_successfully_updated), Snackbar.LENGTH_LONG).show();
+            Log.d(TAG, "onLoadFinished() done");
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            Log.e(TAG, "onLoaderReset() Error for save artists in database!");
+            Snackbar.make(relativeLayout, getString(R.string.robospice_error), Snackbar.LENGTH_LONG).show();
+        }
+
+        /**
+         * Add loaded data for saving in database.
+         *
+         * @param artists
+         */
+        public void updateArtists(List<Artist> artists) {
+            if (loader != null && loader.getId() == SAVE_LOADER_ID) {
+                loader.setArtists(artists);
+            }
         }
     }
 }
