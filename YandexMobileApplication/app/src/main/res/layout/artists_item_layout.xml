@@ -55,4 +55,13 @@
                 android:textColor="?android:textColorSecondary" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/cover_small"
+        android:layout_marginTop="16dp"
+        android:background="@color/dividerLine" />
+
 </RelativeLayout>
