@@ -7,11 +7,14 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.adapters.ArtistsCursorAdapter;
@@ -63,6 +66,7 @@ public class ArtistsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // restarting Loader for loading data from database
         getLoaderManager().restartLoader(LOADER_ID, null, new LoaderCallbackCursor());
     }
 
@@ -79,8 +83,7 @@ public class ArtistsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_artists, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_artists, container, false);
     }
 
     @Override
@@ -110,14 +113,32 @@ public class ArtistsFragment extends Fragment {
             return new DBCursorLoader(getActivity(), getActivity().getContentResolver());
         }
 
+        /**
+         * Loading new data from database is complete.
+         * Update artists adapter.
+         *
+         * @param loader
+         * @param data
+         */
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            Log.d(TAG, "onLoadFinished() started");
             artistsCursorAdapter.swapCursor(data);
+            Log.d(TAG, "onLoadFinished() done");
         }
 
+        /**
+         * At loading data from database end with error.
+         *
+         * @param loader
+         */
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
+            Log.d(TAG, "onLoaderReset() started");
             artistsCursorAdapter.swapCursor(null);
+            Snackbar.make(getActivity().findViewById(R.id.main_relative_layout),
+                    getString(R.string.error_for_loading_data), Snackbar.LENGTH_LONG).show();
+            Log.d(TAG, "onLoaderReset() done");
         }
     }
 }

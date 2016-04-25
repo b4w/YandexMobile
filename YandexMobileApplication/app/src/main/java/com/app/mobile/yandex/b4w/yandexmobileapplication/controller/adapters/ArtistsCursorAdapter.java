@@ -48,9 +48,7 @@ public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCurso
             final RecyclerView recyclerView = (RecyclerView) view.getParent();
             final int position = recyclerView.getChildLayoutPosition(view);
             if (position != RecyclerView.NO_POSITION) {
-                // TODO: может передавать курсор как было?
                 final Cursor cursor = this.getItem(position);
-//                onItemClickListener.onItemClicked(cursor);
                 onItemClickListener.onItemClicked(getArtistByCursor(cursor));
             }
         }
@@ -114,7 +112,7 @@ public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCurso
          * @param imageView - item imageView.
          * @param imageLink - link to image.
          */
-        private void setCoverSmallImage(ImageView imageView, String imageLink) {
+        private void setCoverSmallImage(final ImageView imageView, final String imageLink) {
             if (imageLink != null && !imageLink.isEmpty()) {
                 Picasso.with(imageView.getContext())
                         .load(imageLink)
@@ -126,6 +124,9 @@ public class ArtistsCursorAdapter extends RecyclerViewCursorAdapter<ArtistsCurso
         }
     }
 
+    /**
+     * Interface for callback when click on artist item.
+     */
     public interface OnItemClickListener {
         void onItemClicked(Artist artist);
     }

@@ -1,7 +1,11 @@
 package com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments;
 
 import android.app.Fragment;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,8 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 public class OfficialSiteFragment extends Fragment {
     private static final String TAG = OfficialSiteFragment.class.getSimpleName();
 
+    private static final String TOOLBAR_TITLE = "toolbarTitle";
+
     private WebView webView;
 
     /**
@@ -26,10 +32,11 @@ public class OfficialSiteFragment extends Fragment {
      *
      * @return new OfficialSiteFragment();
      */
-    public static OfficialSiteFragment getInstance(String link) {
+    public static OfficialSiteFragment getInstance(String link, String toolbarTitle) {
         OfficialSiteFragment fragment = new OfficialSiteFragment();
         Bundle bundle = new Bundle();
         bundle.putString(IDBConstants.LINK, link);
+        bundle.putString(TOOLBAR_TITLE, toolbarTitle);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -44,6 +51,7 @@ public class OfficialSiteFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         webView = (WebView) getActivity().findViewById(R.id.off_site_web_view);
+        initToolbar(getArguments().getString(TOOLBAR_TITLE));
         initWebView();
     }
 
@@ -66,5 +74,20 @@ public class OfficialSiteFragment extends Fragment {
         webView.getSettings().setBuiltInZoomControls(true);
         webView.loadUrl(getArguments().getString(IDBConstants.LINK));
         Log.d(TAG, "initWebView() done");
+    }
+
+    /**
+     * Initialize toolbar. Set title and back arrow.
+     */
+    private void initToolbar(String toolbarTitleName) {
+        Log.d(TAG, "initToolbar() started");
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            final Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+            upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.textToolbarHeading), PorterDuff.Mode.SRC_ATOP);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitleName);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        Log.d(TAG, "initToolbar() done");
     }
 }

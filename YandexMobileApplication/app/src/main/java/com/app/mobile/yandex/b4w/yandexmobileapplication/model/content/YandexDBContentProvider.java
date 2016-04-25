@@ -15,8 +15,6 @@ import android.util.Log;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.SQLiteHelper;
 
-import java.sql.SQLException;
-
 /**
  * Created by KonstantinSysoev on 17.04.16.
  * ContentProvider for YandexDB data.
@@ -58,7 +56,7 @@ public class YandexDBContentProvider extends ContentProvider {
 
         switch (URI_MATCHER.match(uri)) {
             case ALL_ROWS:
-                // TODO: добавить реализацию!
+                // TODO: necessary added realization!
                 break;
             case SINGLE_ROW:
                 String rowID = uri.getPathSegments().get(1);
@@ -68,8 +66,7 @@ public class YandexDBContentProvider extends ContentProvider {
                 Log.w(TAG, "YandexDBContentProvider. Not correct request to data base!");
                 break;
         }
-        Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, groupBy, having, sortOrder);
-//        cursor.setNotificationUri();
+        final Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, groupBy, having, sortOrder);
         Log.d(TAG, "query() done");
         return cursor;
     }
@@ -98,7 +95,6 @@ public class YandexDBContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         Log.d(TAG, "insert() started");
         String nullColumnHack = null;
-        // при обновлении значения отдается тот же uri, который пришел или заменяется новым.
         Uri insertedId = uri;
         int numberOfRows = 0;
         final SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
@@ -107,22 +103,19 @@ public class YandexDBContentProvider extends ContentProvider {
             long id = db.insertOrThrow(IDBConstants.TABLE_ARTISTS, nullColumnHack, values);
             if (id > -1) {
                 insertedId = ContentUris.withAppendedId(CONTENT_URI, id);
-                // TODO: добавить сюда observer вместо null???
+                // TODO: added observer instead of null?
                 if (getContext() != null) {
                     getContext().getContentResolver().notifyChange(insertedId, null);
                 }
             }
-            // TODO: добавить закрытие database?
-            db.close();
+            if (db.isOpen()) db.close();
         } catch (SQLiteConstraintException e) {
             numberOfRows = update(uri, values, null, null);
         }
-
         if (numberOfRows == 0) {
             Log.e(TAG, "It wasn't succeeded to update value in the database! Id = "
                     + values.getAsString(IDBConstants.ID));
         }
-//        getContext().getContentResolver().notifyChange(uri, null, false);
         Log.d(TAG, "insert() done");
         return insertedId;
     }
@@ -130,7 +123,7 @@ public class YandexDBContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         Log.d(TAG, "delete() started");
-        // TODO: Надо реализовывать?
+        // TODO: necessary added realization?
         Log.d(TAG, "delete() done");
         return 0;
     }

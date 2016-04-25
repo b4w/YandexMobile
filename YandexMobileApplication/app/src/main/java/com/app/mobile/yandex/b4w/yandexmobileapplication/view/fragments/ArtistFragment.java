@@ -34,7 +34,7 @@ public class ArtistFragment extends Fragment {
      * Interface for open official site in browser.
      */
     public interface IOpenOfficialSiteCallback {
-        void openOfficialSiteLinkInBrowser(String link);
+        void openOfficialSiteLinkInBrowser(String link, String toolbarTitle);
     }
 
     private static final String TAG = ArtistFragment.class.getSimpleName();
@@ -114,6 +114,7 @@ public class ArtistFragment extends Fragment {
     private void setArtistValues() {
         Log.d(TAG, "setArtistValues() started");
         final Resources resources = getActivity().getResources();
+        // loading image on link
         Picasso.with(getActivity().getApplicationContext())
                 .load(artist.getCover().getBig())
                 .placeholder(R.drawable.load_holder)
@@ -183,7 +184,7 @@ public class ArtistFragment extends Fragment {
         link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iOpenOfficialSiteCallback.openOfficialSiteLinkInBrowser(artist.getLink());
+                iOpenOfficialSiteCallback.openOfficialSiteLinkInBrowser(artist.getLink(), artist.getName());
             }
         });
         Log.d(TAG, "initListeners() done");

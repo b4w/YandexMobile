@@ -20,7 +20,6 @@ import com.app.mobile.yandex.b4w.yandexmobileapplication.R;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.content.DBSaveLoader;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.IDBConstants;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.network.YandexRetrofitSpiceRequest;
-import com.app.mobile.yandex.b4w.yandexmobileapplication.model.db.SQLiteHelper;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.view.fragments.ArtistsFragment;
 import com.app.mobile.yandex.b4w.yandexmobileapplication.controller.pojo.Artist;
@@ -39,9 +38,12 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenViewArtistCallback,
         ArtistFragment.IOpenOfficialSiteCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int SAVE_LOADER_ID = 2;
 
-    private YandexRetrofitSpiceRequest yandexRetrofitSpiceRequest;
+    private static final int SAVE_LOADER_ID = 2;
+    private static final int ARTISTS_FRAGMENT_QUEUE_IN_STACK = 1;
+    private static final int ARTIST_FRAGMENT_QUEUE_IN_STACK = 2;
+    private static final int OFF_SITE_FRAGMENT_QUEUE_IN_STACK = 3;
+
     private Toolbar toolbar;
     private RelativeLayout relativeLayout;
     private DBSaveLoaderCallback dbSaveLoaderCallback;
@@ -52,28 +54,12 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
-        relativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
-
-        // add progressBar
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        progressBar.setVisibility(View.INVISIBLE);
-
+        initXmlFields();
         updateToolbar();
         // check turn of the screen
         if (savedInstanceState == null) {
             // screen wasn't turned
-            // create Loader for saving data from yandex json link
-            dbSaveLoaderCallback = new DBSaveLoaderCallback();
-            getSupportLoaderManager().initLoader(SAVE_LOADER_ID, null, dbSaveLoaderCallback);
-
-            progressBar.setVisibility(View.VISIBLE);
-
-            updateFragments(getFragmentManager(), ArtistsFragment.getInstance(), false, true);
-
-            // load data from yandex json link
-            yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
-            getSpiceManager().execute(yandexRetrofitSpiceRequest, "yandex", DurationInMillis.ONE_MINUTE,
-                    new YandexRequestListener());
+            initActivityData();
         } else {
             // screen was turned
             updateFragmentsAfterScreenTurn();
@@ -83,11 +69,11 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
     @Override
     public void onBackPressed() {
         int count = getFragmentManager().getBackStackEntryCount();
-        if (count == 1) {
+        if (count == ARTISTS_FRAGMENT_QUEUE_IN_STACK) {
             super.onBackPressed();
         } else {
             // update toolbar only if transferred to artists list
-            if (count == 2) updateToolbar();
+            if (count == ARTIST_FRAGMENT_QUEUE_IN_STACK) updateToolbar();
             getFragmentManager().popBackStack();
         }
     }
@@ -98,6 +84,38 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Initialize xml fields on view.
+     */
+    private void initXmlFields() {
+        Log.d(TAG, "initXmlFields() started");
+        relativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
+        Log.d(TAG, "initXmlFields() done");
+    }
+
+    /**
+     * First initialize activity
+     */
+    private void initActivityData() {
+        Log.d(TAG, "initActivityData() started");
+        Snackbar.make(relativeLayout, getString(R.string.loading_data_yandex), Snackbar.LENGTH_LONG).show();
+        // create Loader for saving data from yandex json link
+        dbSaveLoaderCallback = new DBSaveLoaderCallback();
+        getSupportLoaderManager().initLoader(SAVE_LOADER_ID, null, dbSaveLoaderCallback);
+        progressBar.setVisibility(View.VISIBLE);
+
+        // starting retrofit and robospice for loading data from yandex json link
+        final YandexRetrofitSpiceRequest yandexRetrofitSpiceRequest = new YandexRetrofitSpiceRequest();
+        getSpiceManager().execute(yandexRetrofitSpiceRequest, "yandex", DurationInMillis.ONE_MINUTE,
+                new YandexRequestListener());
+
+        // loading Artists fragment
+        updateFragments(getFragmentManager(), ArtistsFragment.getInstance(), false, true);
+        Log.d(TAG, "initActivityData() done");
     }
 
     /**
@@ -114,7 +132,8 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
             }
         } else {
             // update display toolbar
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             toolbar.setTitle(R.string.performers_capital);
         }
         Log.d(TAG, "updateToolbar() done");
@@ -149,15 +168,15 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         Fragment fragment;
         switch (fragmentManager.getBackStackEntryCount()) {
             // update display Artists fragment
-            case 1:
+            case ARTISTS_FRAGMENT_QUEUE_IN_STACK:
                 fragment = fragmentManager.findFragmentByTag(ArtistsFragment.class.getSimpleName());
                 break;
             // update display Artist fragment
-            case 2:
+            case ARTIST_FRAGMENT_QUEUE_IN_STACK:
                 fragment = fragmentManager.findFragmentByTag(ArtistFragment.class.getSimpleName());
                 break;
             // update display Official site fragment
-            case 3:
+            case OFF_SITE_FRAGMENT_QUEUE_IN_STACK:
                 fragment = fragmentManager.findFragmentByTag(OfficialSiteFragment.class.getSimpleName());
                 break;
             default:
@@ -188,8 +207,8 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
      * @param link to official page.
      */
     @Override
-    public void openOfficialSiteLinkInBrowser(String link) {
-        updateFragments(getFragmentManager(), OfficialSiteFragment.getInstance(link), true, true);
+    public void openOfficialSiteLinkInBrowser(String link, String toolbarTitle) {
+        updateFragments(getFragmentManager(), OfficialSiteFragment.getInstance(link, toolbarTitle), true, true);
     }
 
     /**
@@ -223,6 +242,7 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             Log.d(TAG, "onRequestFailure() started");
+            if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
             Snackbar.make(relativeLayout, getString(R.string.robospice_error), Snackbar.LENGTH_LONG).show();
             Log.d(TAG, "onRequestFailure() done");
         }
@@ -254,6 +274,13 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
             return loader;
         }
 
+        /**
+         * Saving data to database is complete.
+         * Update Artists fragment.
+         *
+         * @param loader
+         * @param data
+         */
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             Log.d(TAG, "onLoadFinished() started");
@@ -269,6 +296,10 @@ public class MainActivity extends BaseActivity implements ArtistsFragment.IOpenV
             Log.d(TAG, "onLoadFinished() done");
         }
 
+        /**
+         * At saving data from database end with error.
+         * @param loader
+         */
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
             Log.e(TAG, "onLoaderReset() Error for save artists in database!");

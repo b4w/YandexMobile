@@ -17,4 +17,6 @@
     <string name="robospice_error">Ошибка передачи данных</string>
     <string name="official_site">Официальный сайт:</string>
     <string name="data_successfully_updated">Данные успешно обновлены</string>
+    <string name="error_for_loading_data">Ошибка при загрузке данных</string>
+    <string name="loading_data_yandex">Обновление данных с сайта Yandex</string>
 </resources>

@@ -19,7 +19,7 @@ public class StringUtils {
      * @return new String();
      */
     @NonNull
-    public static String getStringFromStringArray(String... inputArray) {
+    public static String getStringFromStringArray(final String... inputArray) {
         StringBuilder sb = new StringBuilder();
         sb.append(inputArray[0]);
         if (inputArray.length > 1) {
@@ -39,7 +39,7 @@ public class StringUtils {
      * @return String();
      */
     @NonNull
-    public static String getWordEnding(int number, String... inputArray) {
+    public static String getWordEnding(int number, final String... inputArray) {
         String result;
         number %= 100;
         if (number >= 11 && number <= 19) {

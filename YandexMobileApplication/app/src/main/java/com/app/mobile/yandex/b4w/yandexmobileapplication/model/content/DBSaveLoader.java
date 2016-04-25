@@ -42,14 +42,27 @@ public class DBSaveLoader extends Loader<Cursor> {
         }
     }
 
+    /**
+     * Set artists for saving in database.
+     *
+     * @param artists
+     */
     public void setArtists(List<Artist> artists) {
         this.artists = artists;
     }
 
+    /**
+     * Return cursor for saving data in database.
+     *
+     * @param cursor
+     */
     private void getResultFromTask(Cursor cursor) {
         deliverResult(cursor);
     }
 
+    /**
+     * AsyncTask for saving new artists list in database.
+     */
     class DBSaveTask extends AsyncTask<List<Artist>, Integer, Cursor> {
 
         private ContentResolver contentResolver;
@@ -76,6 +89,7 @@ public class DBSaveLoader extends Loader<Cursor> {
                 contentValues.put(IDBConstants.COVER_BIG_PATH, "");
                 contentResolver.insert(YandexDBContentProvider.CONTENT_URI, contentValues);
             }
+            // return cursor on saving data
             return contentResolver.query(YandexDBContentProvider.CONTENT_URI, null, null, null, null);
         }
 
